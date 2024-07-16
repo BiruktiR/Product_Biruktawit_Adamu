@@ -1,19 +1,19 @@
 'use client'
 import { useMemo, useState } from 'react';
-import { MRT_EditActionButtons,MaterialReactTable,
-  // createRow,
-   useMaterialReactTable,} from 'material-react-table';
-import { Box,Typography, Button,DialogActions,DialogContent,DialogTitle, IconButton,Tooltip,} from '@mui/material';
+import { MRT_EditActionButtons,MaterialReactTable, useMaterialReactTable,} from 'material-react-table';
+import { Box,Typography, Button,DialogActions,DialogContent,DialogTitle, IconButton,Tooltip, Container,} from '@mui/material';
 import { QueryClient,QueryClientProvider,useMutation,useQuery,useQueryClient,} from '@tanstack/react-query';
 import { fakeData, ustags } from '../proudctListing/index';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Example = () => {
+const Example = ({products}) => {
   const [validationErrors, setValidationErrors] = useState({});
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo( () => {}
+    if (!products) return[];
+    
+    return [
       {
         
         accessorKey: 'id',
@@ -37,21 +37,6 @@ const Example = () => {
           //optionally add validation checking for onBlur or onChange
         },
       },
-      // {
-      //   accessorKey: 'description',
-      //   header: 'Description',
-      //   muiEditTextFieldProps: {
-      //     required: true,
-      //     error: !!validationErrors?.description,
-      //     helperText: validationErrors?.description,
-      //     //remove any previous validation errors when user focuses on the input
-      //     onFocus: () =>
-      //       setValidationErrors({
-      //         ...validationErrors,
-      //         description: undefined,
-      //       }),
-      //   },
-      // },
       {
         accessorKey: 'price',
         header: 'Price',
@@ -95,7 +80,7 @@ const Example = () => {
         },
       },
     ],
-    [validationErrors],
+    [ products, validationErrors],
   );
 
   //call CREATE hook
@@ -152,7 +137,7 @@ const Example = () => {
     //conditionally render detail panel
   const table = useMaterialReactTable({
     columns,
-    data: fetchedUsers,
+    data: products,
     enableExpandAll: false, //disable expand all button
     createDisplayMode: 'modal', //default ('row', and 'custom' are also available)
     editDisplayMode: 'modal', //default ('row', 'cell', 'table', and 'custom' are also available)
@@ -191,8 +176,10 @@ const Example = () => {
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveUser,
     //optionally customize modal content
+  
     renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
       <>
+      
         <DialogTitle variant="h3">Create New Product</DialogTitle>
         <DialogContent
           sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
@@ -216,9 +203,6 @@ const Example = () => {
           }}
         >
           <Typography>Description : {row.original.description}</Typography>
-          {/* <Typography>Type: {row.original.type}</Typography>
-          <Typography>Color: {row.original.color}</Typography> 
-          <Typography>Size: {row.original.size}</Typography> */}
         </Box>
       ) :null,
     //optionally customize modal content
@@ -256,12 +240,6 @@ const Example = () => {
         variant="contained"
         onClick={() => {
           table.setCreatingRow(true); //simplest way to open the create row modal with no default values
-          //or you can pass in a row object to set default values with the `createRow` helper function
-          // table.setCreatingRow(
-          //   createRow(table, {
-          //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
-          //   }),
-          // );
         }}
       >
         Create New Product
@@ -366,15 +344,6 @@ const ExampleWithProviders = () => (
 );
 
 export default ExampleWithProviders;
-
-// const validateRequired = (value) => !!value.length;
-// const validateEmail = (email) =>
-//   !!email.length &&
-//   email
-//     .toLowerCase()
-//     .match(
-//       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-//     );
 
 function validateUser(user) {
   return {
