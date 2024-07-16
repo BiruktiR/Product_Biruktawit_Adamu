@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const Example = ({products}) => {
   const [validationErrors, setValidationErrors] = useState({});
 
-  const columns = useMemo( () => {}
+  const columns = useMemo(() => {
     if (!products) return[];
     
     return [
@@ -79,7 +79,8 @@ const Example = ({products}) => {
             }),
         },
       },
-    ],
+    ];
+  },
     [ products, validationErrors],
   );
 
@@ -137,7 +138,7 @@ const Example = ({products}) => {
     //conditionally render detail panel
   const table = useMaterialReactTable({
     columns,
-    data: products,
+    data: products || [],
     enableExpandAll: false, //disable expand all button
     createDisplayMode: 'modal', //default ('row', and 'custom' are also available)
     editDisplayMode: 'modal', //default ('row', 'cell', 'table', and 'custom' are also available)
